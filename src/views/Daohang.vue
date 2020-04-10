@@ -2,21 +2,14 @@
 <template>
   <div>
     
-    <el-menu  
-    :default-active="activeIndex2"
-    class="el-menu-demo"
-    mode="horizontal"
-    @select="handleSelect"
-    background-color="#F2F6FC"
-    text-color="#909399"
-    active-text-color="#303133"   
-   >
-    <el-menu-item index="1"  > 监控资源</el-menu-item>
-    <template slot="title"></template>
-    <el-menu-item index="2"  >4G新装详情</el-menu-item>
- 
+    <el-breadcrumb separator-class="el-icon-arrow-right" 
+    style="background-color:#EBEEF5;padding:10px 0px;"
 
-    </el-menu>
+     
+   >
+    <el-breadcrumb-item > 监控资源</el-breadcrumb-item> 
+    <el-breadcrumb-item >4G新装详情</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-tabs v-model="activeName" @tab-click="handleClick" mode="horizontal" style="margin-top:8px">
     <el-tab-pane label="指标看板" name="first" ></el-tab-pane>
     <el-tab-pane label="告警信息" name="second"></el-tab-pane>
@@ -41,15 +34,11 @@
 
       
     <el-table row-key="id"
-    :data="tableData"
+    :data="tabledata"
     border
     style="width: 100%;margin-top:15px;padding-top:5px"
     >
-    <el-table-column
-      prop="jkzhib"
-      label="监控指标"
-      width="200">
-    </el-table-column>
+    <el-table-column prop="jkzhib" label="监控指标" width="200" ></el-table-column>
     <el-table-column
       prop="jkmethon"
       label="监控方法"
@@ -89,54 +78,25 @@
   </div>   
 </template>
 <script>
+     import axios from 'axios';    //vue2.x的引入axios进行前后端交互
       export default{
         data(){
           return {
-            activeIndex: '2',
-            activeIndex2: '1',
             activeName: 'third',
-            currentPage4:'5',
-            tableData:[{
-              id:1,
-            jkzhib:'内存使用率',
-            //jkmethon:<i class="el-icon-location"></i><span>周期不确定性预测</span>,
-            jktime:'全天',
-            changer:'张三',
-            chtime:'2019-06-20 09:00:00'
-
-          },{
-            id:2,
-            jkzhib:'文件系统使用率',
-            jkmethon:'周期不确定性预测',
-            jktime:'全天',
-            changer:'张三',
-            chtime:'2019-06-20 09:00:00',
-            children:[{
-              id:21,
-              jkzhib:'/opt root',
-            jkmethon:'周期不确定性预测',
-            jktime:'全天',
-            changer:'张三',
-            chtime:'2019-06-20 09:00:00'
-            },{
-              id:22,
-              jkzhib:'/tmp root',
-            jkmethon:'周期不确定性预测',
-            jktime:'全天',
-            changer:'张三',
-            chtime:'2019-06-20 09:00:00'
-          }]},{
-            id:3,
-            jkzhib:'内存使用率',
-            jkmethon:'周期不确定性预测',
-            jktime:'节假日',
-            changer:'张三',
-            chtime:'2019-06-20 09:00:00'
-
-          }]
+            currentPage4:5,
+            data:[]
             };
     },
+    mounted:function() {
+        axios.get('/api/data').then(res => {//get()中的参数要与mock.js文件中的Mock.mock()配置的路由保持一致
+          this.data = res.data.data;
+          console.log(res.data);//在console中看到数据
+        }).catch(res => {
+          alert('wrong');
+        })
+      },
     methods: {
+     
       handleClick(tab, event) {
         console.log(tab, event);
       },
@@ -149,10 +109,17 @@
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
         }
-    }
+      },
+    mounted:function(){
+      axios.get('/api/data').then(res=>{
+        this.tabledata = res.tabledata;
+        //console.log(tabledata)
+      })
+    }}
+   
 
             
-        }
+        
 </script>
 <style>
 
