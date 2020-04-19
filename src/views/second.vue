@@ -1,171 +1,101 @@
 <template>
-<div >
-  <el-row style="margin-top: 10px" type="flex">
-    <el-col :span="24">
-    <el-card shadow="always">
-    <div style="height:30px" class="grid-content bg-purple-dark">
-      <i class="el-icon-s-fold">故障处理视图</i>
-        <el-button id="index1" style="float:right">自定义</el-button>
-        <el-button id="index2" style="float:right" @click="ninetydate">近90天</el-button>
-        <el-button id="index3" style="float:right" @click="thirdtydate">近30天</el-button>
-        <el-button id="index4" style="float:right" @click="fifteendate">近15天</el-button> 
-      <el-date-picker v-model="range" type="datetimerange" align="right" 
-        style="float:right" :placeholder="placeholder ||'请选择时间范围'" @change="searchTime"></el-date-picker>
-      <span class="demonstration" style="float:right" ><i class="el-icon-date">数据时间：</i></span>
-        
-    </div></el-card></el-col></el-row>
-
- <el-row style="margin-top: 15px"  type="flex">
-   <el-col :span="13.8" style="margin-right:15px" >
-      <el-card shadow="always" >
-        <div  style="height:50px;width:800px;">
-          <el-row style="text-align:center">
-            <el-col :span="6" style="color:red;margin-right:20px;font-size:20px" class="overview-item-value"><strong>3</strong></el-col>
-            <el-col :span="6" style="color:black;margin-right:20px;font-size:20px" class="overview-item-value"><strong>3</strong></el-col>
-            <el-col :span="6" style="color:black;margin-right:20px;font-size:20px" class="overview-item-value"><strong>32</strong><span style="color:gray;font-size:13px">分钟</span></el-col>
-          </el-row>
-          <el-row class="font-medium" style="text-align:center">
-            <el-col :span="6" class="overview-item-title" style="margin-right:20px">未处理完成故障数</el-col>
-            <el-col :span="6" class="overview-item-title" style="margin-right:20px">故障总数</el-col>
-            <el-col :span="6" class="overview-item-title" style="margin-right:20px">故障平均处理时长</el-col>
-          </el-row>
+    <div class="container">
+        <div class="head" >  
+           <i class="el-icon-s-fold" >故障处理视图</i>
+          <el-button id="index1" style="float:right">自定义</el-button>
+          <el-button id="index2" style="float:right" onclick="ninetydate()">近90天</el-button>
+          <el-button id="index3" style="float:right" @click="thirdtydate">近30天</el-button>
+          <el-button id="index4" style="float:right" @click="fifteendate">近15天</el-button> 
+          <el-date-picker  
+           v-model="value1" 
+           type="daterange" 
+           range-separator="~" 
+           format="yyyy-MM-dd"
+           style="float:right" 
+           unlink-panels
+           start-placeholder="开始日期" 
+           end-placeholder="结束日期"
+           :picker-options="pickerOptions">
+          </el-date-picker>
+          <span class="demonstration" style="float:right" ><i class="el-icon-date">数据时间：</i></span>
         </div>
-      </el-card>
-  
-      <el-card shadow="always" style="margin-top: 15px">
-        <div id="zhext" style="height:200px;width:800px;"></div>   
-      </el-card>
-    </el-col>
-    <el-col :span="10.2">
-      <el-card shadow="always">
-        <div id="zhuxt" style="height:305px;width:600px"></div>
-      </el-card>
-    </el-col>
-  </el-row>
 
-  <el-row style="margin-top: 15px"  type="flex">
-    <el-col :span="13.8" style="margin-right:15px">
-      <el-card>  
-        <div id="bingt" style="height:350px;width:800px" ></div>
-        <div id="overflow">
-          <el-menu>
-            <el-submenu index="1">
-              <template slot="title"><i class="el-icon-arrow-up">IaaS</i></template>
-              <i>主机</i><el-progress :stroke-width="10" :percentage="100" :format="format" ></el-progress>
-              <i>防火墙</i><el-progress :stroke-width="10" :percentage="66" :format="format"></el-progress>
-              <i>交换机</i><el-progress :stroke-width="10" :percentage="33" :format="format"></el-progress>
-            </el-submenu>
-      
-            <el-submenu index="2">
-              <template slot="title"><i class="el-icon-arrow-up">PaaS</i></template>
-              <i>主机</i><el-progress :stroke-width="10" :color="paasColor" :percentage="100" :format="format" ></el-progress>
-              <i>防火墙</i><el-progress :stroke-width="10" :color="paasColor" :percentage="66" :format="format" ></el-progress>
-              <i>交换机</i><el-progress :stroke-width="10"  :color="paasColor" :percentage="33" :format="format"></el-progress>
-            </el-submenu>
-            <el-submenu index="3">
-              <template slot="title"> <i class="el-icon-arrow-up">SaaS</i></template>
-              <i>主机</i><el-progress :stroke-width="10" :percentage="100" :format="format" :color="saasColor"></el-progress>
-              <i>防火墙</i><el-progress :stroke-width="10" :percentage="66" :format="format" :color="saasColor"></el-progress>
-              <i>交换机</i><el-progress :stroke-width="10" :percentage="33" :format="format" :color="saasColor"></el-progress>
-            </el-submenu>
-          </el-menu>    
+        <div class="main">
+            <div class="left-1">
+                <div class="left-11">
+                    <div style="height:50px;width:800px;padding:20px">
+                    <el-row style="text-align:center">
+                      <el-col :span="6" style="color:red;margin-right:20px;font-size:20px" class="overview-item-value"><strong>3</strong></el-col>
+                      <el-col :span="6" style="color:black;margin-right:20px;font-size:20px" class="overview-item-value"><strong>3</strong></el-col>
+                      <el-col :span="6" style="color:black;margin-right:20px;font-size:20px" class="overview-item-value"><strong>32</strong><span style="color:gray;font-size:13px">分钟</span></el-col>
+                    </el-row>
+                    <el-row class="font-medium" style="text-align:center">
+                      <el-col :span="6" class="overview-item-title" style="margin-right:20px">未处理完成故障数</el-col>
+                      <el-col :span="6" class="overview-item-title" style="margin-right:20px">故障总数</el-col>
+                      <el-col :span="6" class="overview-item-title" style="margin-right:20px">故障平均处理时长</el-col>
+                    </el-row></div>
+                </div>
+                <div id="zhext" class="left-12">
+                </div>
+                <div class="left-13">
+                    <div id="piet" style="width:750px;height:370px">
+                    </div>
+                    <div id="overflow">
+                      <el-menu>
+                        <el-submenu index="1">
+                        <template slot="title"><i class="el-icon-arrow-up">IaaS</i></template>
+                          <div id="el-1">
+                            <span>主机</span><el-progress  :stroke-width="10" :percentage="100" :format="format" ></el-progress></div>
+                          <div id="el-1">
+                            <span>防火墙</span><el-progress  :stroke-width="10" :percentage="66" :format="format"></el-progress></div>
+                          <div id="el-1">
+                            <span>交换机</span><el-progress :stroke-width="10" :percentage="33" :format="format"></el-progress></div>            
+                        </el-submenu>
+                        <el-submenu index="2">
+                        <template slot="title"><i class="el-icon-arrow-up">PaaS</i></template>
+                          <div id="el-1">
+                            <span>Mysql</span><el-progress :stroke-width="10" :color="paasColor" :percentage="100" :format="format" ></el-progress></div>
+                          <div id="el-1">
+                            <span>DBProxy</span><el-progress :stroke-width="10" :color="paasColor" :percentage="66" :format="format" ></el-progress></div>
+                          <div id="el-1">
+                            <span>Geteway</span><el-progress :stroke-width="10"  :color="paasColor" :percentage="33" :format="format"></el-progress></div>
+                        </el-submenu>
+                        <el-submenu index="3">
+                        <template slot="title"> <i class="el-icon-arrow-up">SaaS</i></template>
+                          <div id="el-1">
+                            <span>应用</span><el-progress :stroke-width="10" :percentage="100" :format="format" :color="saasColor"></el-progress></div>
+                          <div id="el-1">
+                            <span>场景</span><el-progress :stroke-width="10" :percentage="66" :format="format" :color="saasColor"></el-progress></div>
+                          <div id="el-1">
+                            <span>服务</span><el-progress :stroke-width="10" :percentage="33" :format="format" :color="saasColor"></el-progress></div>
+                        </el-submenu>
+                      </el-menu>    
+                    </div>
+                </div>
+            </div>
+            <div class="right-1"> 
+                <div id="zhuxt" class="right-11">
+                </div>
+                <div id="info" class="right-12">
+                   <span style="font-size:20px"><strong>故障影响的资源 TOP5</strong></span>
+                   <el-table  :data="tabledata">
+                      <el-table-column type="index" width="50"></el-table-column>
+                      <el-table-column prop="resname" label="资源名称" width="400"></el-table-column >
+                      <el-table-column prop="ifnumber" label="影响次数" ></el-table-column>
+                    </el-table>
+                </div>  
+            </div>
+            
         </div>
-      </el-card>
-    </el-col>
-     
-    <el-col :span="10.2">
-      <el-card shadow="always">
-        <div id="info" style="height:350px;width:600px">
-          <span>故障影响的资源 TOP5</span>
-          <el-table  
-          :data="tabledata">
-            <el-table-column type="index" width="50"></el-table-column>
-            <el-table-column prop="resname" label="资源名称" width="400"></el-table-column >
-            <el-table-column prop="ifnumber" label="影响次数" ></el-table-column>
-          </el-table>
-        </div></el-card>
-    </el-col>
-  </el-row>
-
-</div>
+    </div>
 </template>
 <script>
-  import { timestamp } from '@/utils/index'
-  import moment from 'moment'
-  export default {
-    props: {
-      placeholder: null
-    },
-    data() {
-      return {
-        range: [],
-        dateObj: {
-          startTime: '',
-          endTime: ''
-        },
-        oneDay: 86400
-
-      }
-    }, 
-    computed: {
-      nowYear() {
-        return moment().get('year')
-      },
-      nowMonth() {
-        return moment().get('month') + 1
-      },
-      nowDate() {
-        return moment().get('date')
-      },
-      nowWeek() {
-        return moment().format('d')
-      }
-    },
-    methods: {
-      searchTime() {
-        if (this.range && this.range[0] && this.range[1]) {
-          this.dateObj.startTime = timestamp(this.range[0])
-          this.dateObj.endTime = timestamp(this.range[1])
-        } else {
-          this.dateObj = {
-            startTime: '',
-            endTime: ''
-          }
-        }
-        this.submitDateRange()
-      },
-      ninetydate() {
-         this.dateObj.startTime = timestamp(moment().month(this.nowMonth - 4).date(nowDate).hours(0).minutes(0).seconds(0)._d)                         // 本月1日
-        this.dateObj.endTime = timestamp(moment()._d)
-        this.submitDateRange()
-      },
-      thirdtydate() {
-        this.dateObj.startTime = timestamp(moment().month(this.nowMonth - 2).date(nowDate).hours(0).minutes(0).seconds(0)._d)                         // 本月1日
-        this.dateObj.endTime = timestamp(moment().month(this.nowMonth-1))
-        this.submitDateRange()
-      },
-      fifteendate() {
-        this.dateObj.startTime = timestamp(moment().month(this.nowMonth - 1).date(nowDate).hours(0).minutes(0).seconds(0)._d) - 1
-        this.dateObj.endTime = timestamp(moment().month(this.nowMonth-1).data(nowDate-this.oneDay*15+1))
-        this.submitDateRange()
-      },
-      exportData() {},
-      submitDateRange() {
-        this.$emit('dateRange', this.dateObj)
-      }
-    }
-  }
-
-</script>
-
-<script >
- //import axios from 'axios';  
-  export default { 
+export default {
     data () {
       return {
-        btdatalist:[{value:12, name:'Iaas',itemStyle:{color:'blue'}},
-                {value:12, name:'Paas',itemStyle:{color:'#E6A23C'}},
-                {value:8, name:'SaaS',itemStyle:{color:'#E8C940'}}],
+        btdatalist:[{value:12, name:'Iaas',percentage:"37.5%",itemStyle:{color:'blue'}},
+                {value:12, name:'Paas',percentage:"37.5%",itemStyle:{color:'#E6A23C'}},
+                {value:8, name:'SaaS',percentage:"25%",itemStyle:{color:'#E8C940'}}],
         zxtdatalist:[]  ,
         paasColor: '#E6A23C',
         saasColor: '#E8C940',
@@ -173,7 +103,7 @@
         {resname:'【KEEPER集群】134.332.24.31|KEEPER_CR...',ifnumber:'7'},
         {resname:'【MYSQL集群】134.332.24.31|MYSQL_CRM...',ifnumber:'5'},
         {resname:'【主机】BO_134.233.78.35',ifnumber:'2'},
-        {resname:'【主机】BO_134.178.67.1',ifnumber:'1'}]          
+        {resname:'【主机】BO_134.178.67.1',ifnumber:'1'}] ,
       }
     },
     mounted() {
@@ -191,7 +121,7 @@
           return percentage==33 ? '2' :`${percentage}%` ;}
       },
       drawLine(){
-        let myChart = this.$echarts.init(document.getElementById('zhext')) 
+        let myChart = this.$echarts.init(document.getElementById('zhext'))
         // 绘制图表
         myChart.setOption({
           title: {
@@ -199,12 +129,13 @@
           },
           tooltip:{},
           xAxis:{
+            data:["20200401","20200402","20200403", "20200404", "20200405","20200406","20200407","20200408","20200409","20200410","20200411","20200412","20200413","20200414","20200415","20200416"],
             splitLine:{show: true,
             lineStyle:{
               type:'dashed',
               color:'#DCDCDC'
             }},
-              data:["17/10","18/10","19/10","20/10"],
+            
               axisLine:{
                 lineStyle:{
                 color:'#DCDCDC'
@@ -254,7 +185,7 @@
                         ],
                         globalCoord: false // 缺省为 false
                     },
-            data:[10,3,5,8]
+            data:[2, 4, 3,6,7,8,9,2, 4, 3,4,6,7,8,9]
         }]
       })
       },
@@ -303,13 +234,7 @@
         let btlist=this.btdatalist
         let total =0
         const target=new Map();
-       /*  btlist.forEach((item) => {
-          // 计算value的和，用来算百分比
-                    total += item.value
-                    // 组成 map {A:1212} ,用来下面获取 value
-                    target.set(item.name, item.value)
-        }); */
-        let myChart2 = this.$echarts.init(document.getElementById('bingt'))
+        let myChart2 = this.$echarts.init(document.getElementById('piet'))
         // 绘制图表
         myChart2.setOption({
           title : {
@@ -319,6 +244,15 @@
             trigger: 'item',
             formatter: "{a} <br/>{b} : {c} ({d}%)"},
           legend: {
+            formatter:function(name){
+                let pieLegendVale= {};
+                btlist.filter((item,index)=>{
+                    if (item.name==name){
+                        pieLegendVale=item;
+                    }
+                });
+                    return pieLegendVale.name+ "  "+pieLegendVale.value + "  "+pieLegendVale.percentage;
+            } ,             
             orient: 'vertical',
             left: '30%',
             y:'center',
@@ -342,20 +276,84 @@
         });
       }
     }
-  }
+  
+}
 </script>
-
-
 <style>
-#overflow {
-width: 300px;
-height: 300px;
-overflow: scroll ;
-position: absolute;
-left: 500px;
-top: 50px;
-
+.container{
+    margin: 0;
+    padding: 0;
+    background-color:#F0F0F0;
+}
+.head{
+    width: 1505px;
+    height: 50px;
+    margin: 0 auto;
+    background-color:white ;
+}
+.main{
+    width: 1505px;
+    height: 710px;
+    margin: 15px 0;
+    background-color:#F0F0F0;
+}
+.left-1{
+    width: 800px;
+    height: 700px;
+    float: left;
+}
+.left-11{
+    width: 800px;
+    height: 100px;
+    background-color: white;
+}
+.left-12{
+    width: 800px;
+    height: 200px;
+    margin: 15px 0;
+    background-color: white;
+}
+.left-13{
+    width: 800px;
+    height: 370px;
+    float: left;
+    background-color: white;
+}
+.right-1{
+    width: 690px;
+    height: 700px;
+    float: right;
 }
 
+.right-11{
+    width: 690px;
+    height: 315px;
+    background-color: white;
+}
+.right-12{
+    width: 690px;
+    height: 370px;
+    margin: 15px 0;
+    background-color: white;
+}
+#overflow{
+  overflow-y:auto;
+  position: absolute;
+  top: 410px;
+  left: 500px;
+  width: 300px;
+  height: 350px;
+  display: inline-block;
+}
+.el-progress{
+  width: 220px;
+}
+#overflow::-webkit-scrollbar{
+  display: none;
+}
+#el-1{
+  display:flex;
+  float: right;
+}
 
 </style>
